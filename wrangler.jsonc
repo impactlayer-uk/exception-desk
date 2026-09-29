@@ -3,6 +3,9 @@
   "name": "impactlayer-exception-desk",
   "main": "src/worker.mjs",
   "compatibility_date": "2026-09-29",
+  "vars": {
+    "NEBIUS_MODEL": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
+  },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",

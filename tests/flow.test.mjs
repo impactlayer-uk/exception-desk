@@ -60,6 +60,8 @@ test('the Nebius adapter makes a runtime chat call and parses fenced JSON withou
   assert.equal(sent.url, 'https://api.tokenfactory.nebius.com/v1/chat/completions');
   assert.equal(sent.headers.Authorization, 'Bearer TEST_KEY_ONLY');
   assert.equal(sent.body.model, 'nvidia/example-verified-model');
+  assert.equal(sent.body.max_thinking_tokens, 256);
+  assert.ok(sent.body.max_tokens > sent.body.max_thinking_tokens);
   assert.equal(result.extracted.request, 'Check a tap');
   assert.doesNotMatch(JSON.stringify(result), /TEST_KEY_ONLY/);
 });
