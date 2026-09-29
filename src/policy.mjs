@@ -1,6 +1,6 @@
 // Synthetic service policy: final routing is determined here, never by model prose.
 const serviceArea = ['Bridgend', 'Pontypridd'];
-const urgentPattern = /\b(gas smell|smell of gas|sparks?|sparking|flood(?:ing|ed)?|burst pipe|live wire|electric shock|carbon monoxide)\b/i;
+const urgentPattern = /\b(gas (?:smell|leak)|smell(?:s|ing)? (?:of )?gas|sparks?|sparking|flood(?:ing|ed)?|burst pipe|live wire|electric shock|carbon monoxide)\b/i;
 const consentPattern = /\b(please (?:call|email|reply|contact) me|you can (?:call|email|reply|contact) me|(?:okay|ok) to (?:call|email|contact) me)\b/i;
 
 const text = (value, max = 180) => String(value ?? '').trim().slice(0, max);
