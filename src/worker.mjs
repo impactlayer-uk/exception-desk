@@ -1,7 +1,7 @@
 import { extractRequest } from './nebius.mjs';
 import { assess } from './policy.mjs';
 
-const allowedAssets = new Set(['/', '/app.js', '/styles.css']);
+const allowedAssets = new Set(['/', '/index.html', '/app.js', '/styles.css']);
 const maxBodyBytes = 4_096;
 // A durable ceiling prevents an unattended public demo from using pay-as-you-go
 // inference after the trial credit expires. Failed attempts count too.
@@ -40,7 +40,11 @@ async function readSmallBody(request) {
 export async function handleRequest(request, env, { fetcher = fetch, now = Date.now } = {}) {
   const url = new URL(request.url);
   if (request.method === 'GET' && allowedAssets.has(url.pathname)) {
-    const asset = await env.ASSETS.fetch(request);
+    // HTML handling is disabled so this explicit root rewrite returns the asset,
+    // rather than redirecting /index.html back to /.
+    const assetUrl = new URL(url);
+    if (assetUrl.pathname === '/') assetUrl.pathname = '/index.html';
+    const asset = await env.ASSETS.fetch(new Request(assetUrl, request));
     const response = new Response(asset.body, asset);
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('Content-Security-Policy', "default-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'none'");

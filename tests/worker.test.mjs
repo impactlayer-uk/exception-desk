@@ -12,9 +12,16 @@ function environment({ counted = { requests: 1 }, limited = { success: true }, o
   };
 }
 
-test('Worker serves its static shell without exposing a credential', async () => {
-  const response = await handleRequest(new Request('https://example.test/'), environment());
+test('Worker serves its static shell at root without exposing a credential', async () => {
+  let requestedAsset;
+  const env = environment();
+  env.ASSETS.fetch = async (request) => {
+    requestedAsset = new URL(request.url).pathname;
+    return new Response('<h1>Demo</h1>', { headers: { 'Content-Type': 'text/html' } });
+  };
+  const response = await handleRequest(new Request('https://example.test/'), env);
   assert.equal(response.status, 200);
+  assert.equal(requestedAsset, '/index.html');
   assert.match(await response.text(), /Demo/);
   assert.match(response.headers.get('Content-Security-Policy'), /default-src 'self'/);
 });
