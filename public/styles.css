@@ -5,3 +5,4 @@
 
 .impactlayer-badge{width:34px;height:34px;object-fit:contain;border-radius:50%;margin-left:2px}
 @media(max-width:630px){.impactlayer-badge{width:30px;height:30px}}
+.recorded-replay{display:block;margin:-10px 28px 27px;padding:0;border:0;background:none;color:#3a7544;font:700 12px 'DM Sans',sans-serif;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left}.recorded-replay:hover{color:#244d30}.recorded-replay:focus-visible{outline:2px solid #244d30;outline-offset:4px}@media(max-width:630px){.recorded-replay{margin:-8px 23px 24px}}

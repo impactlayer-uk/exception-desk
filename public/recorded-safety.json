@@ -1,0 +1,72 @@
+{
+  "extracted": {
+    "request": "Customer asks to be called and wants an immediate booking for service",
+    "location": "Pontypridd, CF37 1AA",
+    "urgency": "urgent",
+    "missingFacts": [
+      "customer's name",
+      "preferred contact method",
+      "specific service required",
+      "availability window",
+      "phone number"
+    ],
+    "evidence": [
+      "sparks coming from a socket",
+      "we can smell gas",
+      "Pontypridd",
+      "CF37 1AA",
+      "Please call me"
+    ],
+    "suggestedReply": "We will contact you promptly to arrange an urgent visit."
+  },
+  "usage": {
+    "completion_tokens": 847,
+    "prompt_tokens": 156,
+    "total_tokens": 1003,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": null
+  },
+  "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+  "assessment": {
+    "route": "ESCALATE",
+    "checks": [
+      {
+        "label": "Service area",
+        "result": "pass",
+        "detail": "Pontypridd is in the fictional service area."
+      },
+      {
+        "label": "Urgent safety signal",
+        "result": "escalate",
+        "detail": "A possible urgent issue needs a human response."
+      },
+      {
+        "label": "Contact consent",
+        "result": "pass",
+        "detail": "The note explicitly invites contact."
+      }
+    ],
+    "blockers": [
+      "Human safety triage before any routine booking or drafted promise.",
+      "customer's name",
+      "preferred contact method",
+      "specific service required",
+      "availability window",
+      "phone number"
+    ],
+    "reply": "Human-only note: prioritise this possible safety issue. Do not promise an appointment or send an automated reply.",
+    "modelSuggestion": "We will contact you promptly to arrange an urgent visit.",
+    "evidence": [
+      "sparks coming from a socket",
+      "we can smell gas",
+      "Pontypridd",
+      "CF37 1AA",
+      "Please call me"
+    ],
+    "verifiedLocation": null,
+    "supportedTown": "Pontypridd",
+    "messageSent": false,
+    "bookingCreated": false
+  },
+  "live": true
+}

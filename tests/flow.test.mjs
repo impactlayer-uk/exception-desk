@@ -60,10 +60,23 @@ test('the Nebius adapter makes a runtime chat call and parses fenced JSON withou
   assert.equal(sent.url, 'https://api.tokenfactory.nebius.com/v1/chat/completions');
   assert.equal(sent.headers.Authorization, 'Bearer TEST_KEY_ONLY');
   assert.equal(sent.body.model, 'nvidia/example-verified-model');
+  assert.deepEqual(sent.body.response_format, { type: 'json_object' });
   assert.equal(sent.body.max_thinking_tokens, 256);
   assert.ok(sent.body.max_tokens > sent.body.max_thinking_tokens);
   assert.equal(result.extracted.request, 'Check a tap');
   assert.doesNotMatch(JSON.stringify(result), /TEST_KEY_ONLY/);
+});
+
+test('an unusable live response still routes a source hazard to a human without a booking', async () => {
+  const result = await extractRequest('Sparks from a socket in Pontypridd. Please call me.', {
+    apiKey: 'TEST_KEY_ONLY', model: 'nvidia/example-verified-model',
+    fetcher: async () => ({ ok: true, json: async () => ({ choices: [{ message: { content: null } }] }) }),
+  });
+  assert.equal(result.modelStatus, 'unavailable');
+  const decision = assess('Sparks from a socket in Pontypridd. Please call me.', result.extracted);
+  assert.equal(decision.route, 'ESCALATE');
+  assert.equal(decision.messageSent, false);
+  assert.equal(decision.bookingCreated, false);
 });
 
 test('invalid model output fails closed', () => assert.throws(() => parseModelOutput('Sure, I booked it for you.'), /JSON object/));

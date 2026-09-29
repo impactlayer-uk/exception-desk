@@ -9,6 +9,7 @@ export async function extractRequest(note, { apiKey, model, fetcher = fetch } = 
     body: JSON.stringify({
       model,
       temperature: 0,
+      response_format: { type: 'json_object' },
       // Nemotron uses a reasoning phase. Bound it so the final JSON is not
       // starved of output tokens on short extraction tasks.
       max_tokens: 1_200,
@@ -23,5 +24,19 @@ export async function extractRequest(note, { apiKey, model, fetcher = fetch } = 
   if (!response.ok) throw new Error(`Nebius inference returned HTTP ${response.status}.`);
   const data = await response.json();
   const content = data?.choices?.[0]?.message?.content;
-  return { extracted: parseModelOutput(content), usage: data?.usage ?? null, model: data?.model ?? model };
+  let extracted;
+  let modelStatus = 'extracted';
+  try {
+    extracted = parseModelOutput(content);
+  } catch {
+    // The live model was called, but an unusable response must never become a
+    // booking or customer message. Source-based safety rules still run.
+    modelStatus = 'unavailable';
+    extracted = {
+      request: 'Model extraction unavailable', location: '', urgency: 'unknown',
+      missingFacts: ['Model extraction requires human review'], evidence: [],
+      suggestedReply: '',
+    };
+  }
+  return { extracted, modelStatus, usage: data?.usage ?? null, model: data?.model ?? model };
 }

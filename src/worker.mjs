@@ -1,7 +1,7 @@
 import { extractRequest } from './nebius.mjs';
 import { assess } from './policy.mjs';
 
-const allowedAssets = new Set(['/', '/index.html', '/app.js', '/styles.css', '/impactlayer-logo.png']);
+const allowedAssets = new Set(['/', '/index.html', '/app.js', '/styles.css', '/impactlayer-logo.png', '/recorded-safety.json']);
 const maxBodyBytes = 4_096;
 // A durable ceiling prevents an unattended public demo from using pay-as-you-go
 // inference after the trial credit expires. Failed attempts count too.

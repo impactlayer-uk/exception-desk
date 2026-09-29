@@ -39,7 +39,7 @@ function render(data) {
   put('#route-icon', route === 'ESCALATE' ? '!' : route === 'CLARIFY' ? '?' : '✓');
   put('#model-name', data.model);
   put('#fact-request', data.extracted.request);
-  put('#fact-location', data.assessment.verifiedLocation || 'Not established in source');
+  put('#fact-location', data.assessment.verifiedLocation || data.assessment.supportedTown || 'Not established in source');
   put('#fact-urgency', data.extracted.urgency);
   list('#evidence-list', data.assessment.evidence.map((item) => `“${item}”`), 'No exact source quote was returned.');
   put('#model-suggestion', data.assessment.modelSuggestion);
@@ -61,11 +61,26 @@ function render(data) {
   }
   list('#blockers', data.assessment.blockers, 'No blocker found by these fictional policy checks. A human still reviews the case.');
   put('#reply', data.assessment.reply);
-  status.textContent = `Live inference complete. ${route.toLowerCase()} route shown for human review.`;
+  status.textContent = data.modelStatus === 'unavailable'
+    ? `The live model returned no usable extraction. Fixed safety checks ran; ${route.toLowerCase()} route requires human review.`
+    : `Live inference complete. ${route.toLowerCase()} route shown for human review.`;
 }
 
 document.querySelectorAll('.scenario').forEach((button) => button.addEventListener('click', () => setSample(button.dataset.scenario)));
 note.addEventListener('input', () => { count.textContent = `${note.value.length} / 1,200`; document.querySelectorAll('.scenario').forEach((button) => button.classList.remove('active')); });
+async function replayRecorded() {
+  setSample('urgent');
+  status.textContent = 'Loading the recorded fictional live run…';
+  try {
+    const response = await fetch('/recorded-safety.json');
+    if (!response.ok) throw new Error('The recorded example is unavailable.');
+    render(await response.json());
+    status.textContent = 'Recorded fictional live run from 29 September 2026. Replay only; no new model call.';
+  } catch (error) {
+    status.textContent = error instanceof Error ? error.message : 'The recorded example is unavailable.';
+  }
+}
+document.querySelector('#replay').addEventListener('click', replayRecorded);
 analyse.addEventListener('click', async () => {
   const value = note.value.trim();
   if (value.length < 20) { status.textContent = 'Add at least 20 characters of fictional case detail.'; return; }
@@ -81,3 +96,4 @@ analyse.addEventListener('click', async () => {
   finally { analyse.disabled = false; analyse.innerHTML = 'Analyse with live model <b>↗</b>'; }
 });
 setSample('routine');
+if (new URLSearchParams(location.search).get('replay') === 'safety') replayRecorded();
