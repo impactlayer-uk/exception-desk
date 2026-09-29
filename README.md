@@ -2,11 +2,11 @@
 
 A fictional service-enquiry handoff for the Nebius × NVIDIA Global AI Hackathon. A Nebius Token Factory model extracts facts and source evidence; deterministic checks decide whether a case needs safety escalation, clarification, or human review. The app never sends a reply or creates a booking. No real customer data or measured business outcomes are included.
 
-**Status:** Private prototype. The Nebius × NVIDIA Devpost account is registered, but Token Factory access, live inference, a public demo, an open-source licence and contest submission are not yet verified. A qualifying entry requires a confirmed NVIDIA open-source model, at least one successful live Token Factory call, public judging access, a public licensed repository and a public video.
+**Status:** Private prototype. The Nebius × NVIDIA Devpost account is registered. The Token Factory Playground returned one live response from NVIDIA Nemotron-3-Nano-30B-A3B using a fictional gas-enquiry note; this does not verify an API call from this app. Nebius API key management is unavailable during its 29 September maintenance window. A public demo, an open-source licence and contest submission are not yet verified. A qualifying entry requires a successful app-level live Token Factory call, public judging access, a public licensed repository and a public video.
 
 ## Run locally
 
-Node.js 20+ is required. Set `NEBIUS_API_KEY` and `NEBIUS_MODEL` in the process environment; the latter must be chosen from the authenticated Nebius model list. Do not put the key in the repository or browser. Then run `npm start` and open `http://127.0.0.1:4174`. Without those settings, the UI loads but the analysis endpoint returns a clear configuration error.
+Node.js 20+ is required. Set `NEBIUS_API_KEY` and `NEBIUS_MODEL` in the process environment; the Playground-confirmed model routing key is `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`. Do not put the API key in the repository or browser. Then run `npm start` and open `http://127.0.0.1:4174`. Without those settings, the UI loads but the analysis endpoint returns a clear configuration error.
 
 `npm test` checks that urgent source text overrides a routine model classification and untrusted instructions, invented location/consent cannot clear checks, a routine case remains human-reviewed, and the Nebius adapter sends a runtime inference request without returning the test key.
 
