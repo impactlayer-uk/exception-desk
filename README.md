@@ -10,6 +10,10 @@ Node.js 20+ is required. Set `NEBIUS_API_KEY` and `NEBIUS_MODEL` in the process 
 
 `npm test` checks that urgent source text overrides a routine model classification and untrusted instructions, invented location/consent cannot clear checks, a routine case remains human-reviewed, and the Nebius adapter sends a runtime inference request without returning the test key.
 
-The app is deliberately small and dependency-free. The public demo deployment and cost cap will be chosen only after the Nebius credit route is verified. The source is currently unlicensed and not offered for reuse.
+The runtime app is deliberately small and dependency-free; Wrangler is a development/deployment tool. The public demo deployment will follow verification of the Nebius credit route. The source is currently unlicensed and not offered for reuse.
+
+## Cloudflare demo preparation
+
+The same UI and policy logic have a Worker adapter in `src/worker.mjs`. It serves the static files, keeps the Nebius key server-side, applies a two-request-per-minute-per-IP limit, and uses a separate D1 database to cap live calls at 100 a day. The Worker runs locally with `npm run dev:worker` after `npx wrangler d1 execute exception-desk-demo --local --file=schema.sql`. Its remote D1 database has been created and initialised, but the Worker is **not deployed** and has no API key or confirmed model. Never commit a key or add one to `wrangler.jsonc`.
 
 Built by [ImpactLayer](https://impactlayer.co.uk/) as a fictional work sample.
