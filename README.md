@@ -2,7 +2,7 @@
 
 A fictional service-enquiry handoff for the Nebius × NVIDIA Global AI Hackathon. A Nebius Token Factory model extracts facts and source evidence; deterministic checks decide whether a case needs safety escalation, clarification, or human review. The app never sends a reply or creates a booking. No real customer data or measured business outcomes are included.
 
-**Status:** Private prototype. The Nebius × NVIDIA Devpost account is registered. The Token Factory Playground returned one live response from NVIDIA Nemotron-3-Nano-30B-A3B using a fictional gas-enquiry note; this does not verify an API call from this app. Nebius API key management is unavailable during its 29 September maintenance window. A public demo, an open-source licence and contest submission are not yet verified. A qualifying entry requires a successful app-level live Token Factory call, public judging access, a public licensed repository and a public video.
+**Status:** Prototype. The Nebius × NVIDIA Devpost account is registered. The Token Factory Playground returned one live response from NVIDIA Nemotron-3-Nano-30B-A3B using a fictional gas-enquiry note; this does not verify an API call from this app. Nebius API key management is unavailable during its 29 September maintenance window. A hosted demo, an app-level model call, a public video and contest submission are not yet verified. A qualifying entry requires all of them.
 
 ## Run locally
 
@@ -10,10 +10,12 @@ Node.js 20+ is required. Set `NEBIUS_API_KEY` and `NEBIUS_MODEL` in the process 
 
 `npm test` checks that urgent source text overrides a routine model classification and untrusted instructions, invented location/consent cannot clear checks, a routine case remains human-reviewed, and the Nebius adapter sends a runtime inference request without returning the test key.
 
-The runtime app is deliberately small and dependency-free; Wrangler is a development/deployment tool. The public demo deployment will follow verification of the Nebius credit route. The source is currently unlicensed and not offered for reuse.
+The runtime app is deliberately small and dependency-free; Wrangler is a development/deployment tool. The public demo deployment will follow verification of the Nebius credit route. This contest-specific project is released under the [MIT License](LICENSE); it does not include code from Dragon Academy, POWS or Balltrix.
 
 ## Cloudflare demo preparation
 
-The same UI and policy logic have a Worker adapter in `src/worker.mjs`. It serves the static files, keeps the Nebius key server-side, applies a two-request-per-minute-per-IP limit, and uses a separate D1 database to cap live calls at 100 a day. The Worker runs locally with `npm run dev:worker` after `npx wrangler d1 execute exception-desk-demo --local --file=schema.sql`. Its remote D1 database has been created and initialised, but the Worker is **not deployed** and has no API key or confirmed model. Never commit a key or add one to `wrangler.jsonc`.
+The same UI and policy logic have a Worker adapter in `src/worker.mjs`. It serves the static files, keeps the Nebius key server-side, applies a two-request-per-minute-per-IP limit, and uses a separate D1 database to cap live calls at **20 for the lifetime of the demo**, including failed attempts. The cap is stored under one durable D1 key, so it does not reset daily. The Worker runs locally with `npm run dev:worker` after `npx wrangler d1 execute exception-desk-demo --local --file=schema.sql`. Its remote D1 database has been created and initialised, but the Worker is **not deployed** and has no API key. Never commit a key or add one to `wrangler.jsonc`. Credits and billing must be checked before enabling live inference; this application-level cap is not an account-wide spending limit.
+
+To set up a separate Cloudflare deployment, create a D1 database, replace the database ID in `wrangler.jsonc`, then run `npx wrangler d1 execute exception-desk-demo --remote --file=schema.sql`. Set `NEBIUS_MODEL` to a model confirmed in your own Token Factory account, and add `NEBIUS_API_KEY` with `npx wrangler secret put NEBIUS_API_KEY`. Run `npm test` before `npm run deploy`. Do not add a key until the account's available credit and billing controls have been checked. The public form is only for fictional data; the demo is not a live customer intake system.
 
 Built by [ImpactLayer](https://impactlayer.co.uk/) as a fictional work sample.

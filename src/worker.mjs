@@ -3,7 +3,9 @@ import { assess } from './policy.mjs';
 
 const allowedAssets = new Set(['/', '/app.js', '/styles.css']);
 const maxBodyBytes = 4_096;
-const dailyLimit = 100;
+// A durable ceiling prevents an unattended public demo from using pay-as-you-go
+// inference after the trial credit expires. Failed attempts count too.
+const lifetimeLimit = 20;
 
 function json(status, body) {
   return new Response(JSON.stringify(body), {
@@ -57,10 +59,9 @@ export async function handleRequest(request, env, { fetcher = fetch, now = Date.
   const limited = await env.PER_IP.limit({ key: ip });
   if (!limited.success) return json(429, { error: 'Please wait before analysing another case.' });
 
-  const day = new Date(now()).toISOString().slice(0, 10);
   const counted = await env.USAGE.prepare('INSERT INTO inference_usage(day, requests) VALUES (?1, 1) ON CONFLICT(day) DO UPDATE SET requests = requests + 1 WHERE requests < ?2 RETURNING requests')
-    .bind(day, dailyLimit).first();
-  if (!counted) return json(429, { error: 'Daily demo limit reached. Please try tomorrow.' });
+    .bind('__lifetime__', lifetimeLimit).first();
+  if (!counted) return json(429, { error: 'The live demo inference budget is exhausted.' });
 
   try {
     const result = await extractRequest(note, { apiKey: env.NEBIUS_API_KEY, model: env.NEBIUS_MODEL, fetcher });
