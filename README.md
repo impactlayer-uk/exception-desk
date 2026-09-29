@@ -12,6 +12,20 @@ Node.js 20+ is required. Set `NEBIUS_API_KEY` and `NEBIUS_MODEL` in the process 
 
 The runtime app is deliberately small and dependency-free; Wrangler is a development/deployment tool. The public demo deployment will follow verification of the Nebius credit route. This contest-specific project is released under the [MIT License](LICENSE); it does not include code from Dragon Academy, POWS or Balltrix.
 
+## How a case moves
+
+```mermaid
+flowchart LR
+  A[Operator enters fictional note] --> B[Worker rate limit]
+  B --> C[D1 lifetime inference counter]
+  C --> D[Nebius Token Factory: NVIDIA Nemotron]
+  D --> E[Parse facts and verify quoted evidence]
+  E --> F[Fixed service-area, consent and safety checks]
+  F --> G[Human-review route and unsent draft]
+```
+
+The model is asked to extract facts and propose a reply, not to decide whether a job is booked. Source-text safety keywords, supported towns and explicit contact consent are checked separately in `src/policy.mjs`. Model suggestions are shown as untrusted text; the app never sends them. The Worker stores only the usage counter in D1, not customer notes or model output.
+
 ## Cloudflare demo preparation
 
 The same UI and policy logic have a Worker adapter in `src/worker.mjs`. It serves the static files, keeps the Nebius key server-side, applies a two-request-per-minute-per-IP limit, and uses a separate D1 database to cap live calls at **20 for the lifetime of the demo**, including failed attempts. The cap is stored under one durable D1 key, so it does not reset daily. The Worker runs locally with `npm run dev:worker` after `npx wrangler d1 execute exception-desk-demo --local --file=schema.sql`. Its remote D1 database has been created and initialised, but the Worker is **not deployed** and has no API key. Never commit a key or add one to `wrangler.jsonc`. Credits and billing must be checked before enabling live inference; this application-level cap is not an account-wide spending limit.
