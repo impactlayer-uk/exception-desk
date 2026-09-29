@@ -42,6 +42,7 @@ function render(data) {
   put('#fact-location', data.assessment.verifiedLocation || 'Not established in source');
   put('#fact-urgency', data.extracted.urgency);
   list('#evidence-list', data.assessment.evidence.map((item) => `“${item}”`), 'No exact source quote was returned.');
+  put('#model-suggestion', data.assessment.modelSuggestion);
   const checks = $('#checks');
   checks.replaceChildren();
   for (const check of data.assessment.checks) {
