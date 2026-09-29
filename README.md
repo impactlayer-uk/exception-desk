@@ -2,7 +2,7 @@
 
 A fictional service-enquiry handoff for the Nebius × NVIDIA Global AI Hackathon. A Nebius Token Factory model extracts facts and source evidence; deterministic checks decide whether a case needs safety escalation, clarification, or human review. The app never sends a reply or creates a booking. No real customer data or measured business outcomes are included.
 
-**Status:** The [hosted demo](https://impactlayer-exception-desk.impactlayer.workers.dev/) made verified model-backed analyses through Nebius Token Factory on 29 September 2026: a fictional gas concern was escalated to a person, and a fictional dripping tap was routed for clarification. The model's suggestion is labelled untrusted and never sent. A [recorded fictional safety run](https://impactlayer-exception-desk.impactlayer.workers.dev/?replay=safety) shows the saved live result without using another model call. The Nebius × NVIDIA Devpost entry remains a draft until its public video and final submission are complete.
+**Status:** The [hosted demo](https://impactlayer-exception-desk.impactlayer.workers.dev/) made verified model-backed analyses through Nebius Token Factory on 29 September 2026: a fictional gas concern was escalated to a person, and a fictional dripping tap was routed for clarification. The model's suggestion is labelled untrusted and never sent. A [recorded fictional safety run](https://impactlayer-exception-desk.impactlayer.workers.dev/?replay=safety) shows the saved live result without using another model call. The [55-second public video](https://youtu.be/fervYJ1sXSY) shows the fictional workflow. The Nebius × NVIDIA Devpost entry remains a draft pending public repository visibility and final submission.
 
 ## Run locally
 
